@@ -8,6 +8,7 @@ import db from "./db";
 import { messagesTable } from "./db/schema";
 import { eq, ne, and, inArray } from "drizzle-orm";
 
+
 const frontEnd = process.env.FRONT_END!
 
 
