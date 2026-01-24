@@ -8,16 +8,20 @@ import errorHandler from "./middlewares/errorHandler";
 import cookieParser from 'cookie-parser'
 
 const app = express();
-
+const frontEnd = process.env.FRONT_END!
 
 app.use(
     cors({
-        origin:"http://localhost:3000",
+        origin:[frontEnd,"http://localhost:3000"],
         credentials:true,
     })
 )
 app.use(express.json());
 app.use(cookieParser())
+
+app.get("/health" , (req,res)=>{
+    res.send("Server is running")
+})
 
 // AUTH route
 app.use("/api/auth", authRoutes);
