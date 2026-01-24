@@ -9,7 +9,6 @@ import { messagesTable } from "./db/schema";
 import { eq, ne, and, inArray } from "drizzle-orm";
 
 
-const frontEnd = process.env.FRONT_END!
 
 
 const JWT_SECRET = process.env.JWT_SECRET!;
@@ -17,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [frontEnd,"http://localhost:3000"],
+    origin: ["https://syncly-fawn.vercel.app","http://localhost:3000"],
     credentials: true,
   },
 });

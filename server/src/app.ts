@@ -9,11 +9,10 @@ import cookieParser from 'cookie-parser'
 
 
 const app = express();
-const frontEnd = process.env.FRONT_END!
 
 app.use(
     cors({
-        origin:[frontEnd,"http://localhost:3000"],
+        origin:["https://syncly-fawn.vercel.app","http://localhost:3000"],
         credentials:true,
     })
 )
