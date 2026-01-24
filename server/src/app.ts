@@ -5,8 +5,10 @@ import messageRoute from './routes/messageRoute'
 import userRoute from './routes/userRoute'
 import cors from 'cors'
 import errorHandler from "./middlewares/errorHandler";
+import cookieParser from 'cookie-parser'
 
 const app = express();
+
 
 app.use(
     cors({
@@ -15,7 +17,7 @@ app.use(
     })
 )
 app.use(express.json());
-
+app.use(cookieParser())
 
 // AUTH route
 app.use("/api/auth", authRoutes);

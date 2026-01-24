@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { createOneToOneChat, getUserChats } from "../services/chatService";
-import { redis } from "../redis";
 
 export async function createChat(
   req: Request & { userId?: number },
@@ -14,7 +13,7 @@ export async function createChat(
 
   const { otherUserId } = req.body;
 
-  // ✅ Add validation here
+  // ✅ Validation
   if (!otherUserId) {
     return res.status(400).json({ message: "otherUserId is required" });
   }
@@ -34,7 +33,6 @@ export async function createChat(
   } catch (error) {
     console.error("Chat creation error:", error);
 
-    // Handle specific errors
     if (error instanceof Error) {
       const message = error.message;
 
@@ -63,7 +61,6 @@ export async function createChat(
         });
       }
 
-      // Log unexpected errors with full details
       console.error("Unexpected error details:", {
         message: error.message,
         stack: error.stack,
@@ -78,6 +75,16 @@ export async function getChats(
   req: Request & { userId?: number },
   res: Response
 ) {
-  const chats = await getUserChats(req.userId!);
-  res.json({ success: true, chats });
+  try {
+    if (!req.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const chats = await getUserChats(req.userId);
+    console.log(chats)
+    res.json({ success: true, chats });
+  } catch (error) {
+    console.error("Error fetching chats:", error);
+    res.status(500).json({ message: "Failed to fetch chats" });
+  }
 }

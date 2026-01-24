@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import appError from "./appError";
 
 interface AuthRequest extends Request {
   userId?: number;
@@ -16,30 +17,23 @@ export function authMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    return res.status(401).json({ message: "Missing token" });
-  }
-
-  const token = authHeader.startsWith("Bearer ")
-    ? authHeader.split(" ")[1]
-    : null;
+  const token = req.cookies?.token
 
   if (!token) {
-    return res.status(401).json({ message: "Invalid token format" });
+    throw new appError("You are not Authenticated", 401);
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as AuthJwtPayload;
 
     if (!decoded.userId) {
-      return res.status(401).json({ message: "Invalid token payload" });
+      throw new appError("Invalid token payload", 401);
     }
 
     req.userId = decoded.userId;
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+    throw new appError("Invalid or expired token", 401);
   }
 }
