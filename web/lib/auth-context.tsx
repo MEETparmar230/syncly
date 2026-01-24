@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const authPaths = ["/login","/register"]
   const pathname = usePathname()
   const router= useRouter()
-  const [sleeping,setSleeping] = useState<boolean>()
+  const [sleeping,setSleeping] = useState<boolean>(false)
   const [backendLoading,setBackendLoading] = useState<boolean>(true)
 
 useEffect(() => {
@@ -39,10 +39,10 @@ useEffect(() => {
     try {
       setBackendLoading(true)
 
-      const res = await fetch("/health", {
+      const res = await fetch(`${path}/health`, {
         cache: "no-store",
       })
-
+      console.log(res)
       if (!res.ok) {
         setSleeping(true)
       } else {
@@ -53,6 +53,7 @@ useEffect(() => {
       setSleeping(true) 
     } finally {
       setBackendLoading(false)
+      
     }
   }
 
