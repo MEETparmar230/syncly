@@ -17,43 +17,7 @@ export default function Home() {
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState<SelectedChat | null>(null);
   const [chatListRefresh, setChatListRefresh] = useState(0);
-  const [sleeping,setSleeping] = useState<boolean>()
-  const [backendLoading,setBackendLoading] = useState<boolean>(true)
-
-useEffect(() => {
-  const checkBackend = async () => {
-    try {
-      setBackendLoading(true)
-
-      const res = await fetch("/health", {
-        cache: "no-store",
-      })
-
-      if (!res.ok) {
-        setSleeping(true)
-      } else {
-        setSleeping(false)
-      }
-    } catch (err) {
-      console.error("Backend is sleeping or unreachable")
-      setSleeping(true) 
-    } finally {
-      setBackendLoading(false)
-    }
-  }
-
-  checkBackend()
-}, [])
-
-useEffect(() => {
-  if (sleeping) {
-    const timer = setTimeout(() => {
-      window.location.reload()
-    }, 20000)
-
-    return () => clearTimeout(timer)
-  }
-}, [sleeping])
+  
 
 
 
@@ -109,16 +73,7 @@ useEffect(() => {
     });
   };
 
-  if (!backendLoading && sleeping) {
-  return (
-    <div className="bg-zinc-900 text-zinc-200 flex items-center justify-center h-screen">
-      <p className="text-lg">
-        Please retry after 20-30 seconds, backend is waking up ⏳
-      </p>
-    </div>
-  )
-}
-
+ 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       
