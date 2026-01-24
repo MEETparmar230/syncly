@@ -2,29 +2,56 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/api";
-import { socket } from "@/lib/socket";
+import axios from 'axios'
+import toast from "react-hot-toast";
+import { useAuthContex } from "@/lib/auth-context";
+
+type LoginResponse = {
+  success?: boolean,
+  message?: string,
+  token?:string
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const path = process.env.NEXT_PUBLIC_API!
+  const {setIsLoggedIn} = useAuthContex()
 
   async function handleLogin() {
-    const res = await apiFetch("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await axios.post<LoginResponse>(
+        `${path}/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
 
-    
-if (res.success) {
-  localStorage.setItem("token", res.token);
+      if (res.data.success) {
+        
+      sessionStorage.setItem("socket-token",res.data?.token as string)
+      toast.success("Login successful");
+      setIsLoggedIn(true)
+      router.push("/");
 
-  socket.auth = { token: res.token };
-  socket.connect();
+      }
+      
+    }
+    catch (err) {
+      
+      if (axios.isAxiosError(err)) {
+        console.log("RESPONSE:", err?.response);
+    console.log("DATA:", err?.response?.data);
+        toast.error(err.response?.data?.message || "Invalid credentials");
+      } 
+      else if (err instanceof Error){
 
-  router.push("/chats");
-}
+        toast.error(err.message);
+      }
+      else{
+        toast.error("Something went wrong")
+      }
+    }
   }
 
   return (

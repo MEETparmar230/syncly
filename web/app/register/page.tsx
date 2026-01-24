@@ -2,22 +2,37 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/api";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const path = process.env.NEXT_PUBLIC_API!
 
   async function handleRegister() {
-    const res = await apiFetch("/auth/register", {
-      method: "POST",
-      body: JSON.stringify({ name, email, password }),
-    });
+   console.log(path)
+    try{
 
-    if (res.success) router.push("/login");
-    else alert("Registration failed");
+      const res = await axios.post(`${path}/auth/register`,{ name, email, password },{withCredentials:true})
+
+      if(!res.data.success){
+        throw new Error("Failed to Register")
+      }
+
+      toast.success("User Registered Successfully")
+      router.push("/login")
+    }catch(err){
+      console.log(err)
+      if(err instanceof AxiosError){
+        toast.error( err.response?.data?.message || "Internal Server Error")
+      }
+      else{
+        toast.error("Something went wrong")
+      }
+    }
   }
 
   return (
