@@ -15,6 +15,13 @@
       "when": 1766479995465,
       "tag": "0001_dusty_vindicator",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769852576011,
+      "tag": "0002_overrated_arachne",
+      "breakpoints": true
     }
   ]
 }

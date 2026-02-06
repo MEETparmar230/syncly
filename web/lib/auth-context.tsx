@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { socket } from './socket'
-import toast from 'react-hot-toast'
 import { usePathname, useRouter } from 'next/navigation'
 
 
@@ -95,7 +94,7 @@ useEffect(() => {
         setIsLoggedIn(false)
         socket.disconnect()
         if(!authPaths.includes(pathname)){
-          router.push('/login')
+          // router.push('/login')
         }
       } finally {
         setLoading(false)
@@ -128,3 +127,5 @@ export function useAuthContex() {
   if (!ctx) throw new Error('useAuthContex must be used inside AuthProvider')
   return ctx
 }
+
+

@@ -1,6 +1,6 @@
 {
-  "id": "27ef63c5-2eda-4bbb-a598-845057a5c730",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "bbe85a52-2756-4cac-bc6a-e3b10c1b9514",
+  "prevId": "f16ce9f5-9a73-4aad-a481-e93982784002",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -170,6 +170,13 @@
           "notNull": true,
           "default": "now()"
         },
+        "delivered": {
+          "name": "delivered",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "seen": {
           "name": "seen",
           "type": "boolean",
@@ -284,6 +291,13 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_name_unique": {
+          "name": "users_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,

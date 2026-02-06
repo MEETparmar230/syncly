@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import db from "../db";
 import appError from "../middlewares/appError";
 import { AuthJwtPayload } from "../types/jwtSchema";
+import { or } from "drizzle-orm";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -12,7 +13,29 @@ export async function registerUser(
   name: string,
   email: string,
   password: string
-) {
+) 
+{
+  
+  const emailExists = await db.select().from(usersTable).where(eq(usersTable.email,email))
+
+  const nameExists = await db.select().from(usersTable).where(eq(usersTable.name,name))
+
+if(emailExists.length !== 0 && nameExists.length !== 0){
+  throw new appError("Name and Email both already exists",401)
+}
+  if(emailExists.length !== 0){
+    console.log(emailExists)
+    
+    throw new appError("Email already exists",401)
+  }
+
+  if(nameExists.length !== 0){
+    console.log(nameExists)
+    throw new appError("UserName is Taken",401)
+  }
+
+
+
   const hashedPassword = await bcrypt.hash(password, 10);
   const [user] = await db
     .insert(usersTable)
@@ -27,6 +50,8 @@ export async function registerUser(
       email: usersTable.email,
     });
   return user;
+
+
 }
 
 export async function loginUser(email: string, password: string) {

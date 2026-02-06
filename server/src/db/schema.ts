@@ -3,7 +3,7 @@ import { pgTable, serial, varchar, timestamp, primaryKey, index,  boolean, integ
 
 export const usersTable = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),

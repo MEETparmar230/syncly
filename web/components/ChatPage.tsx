@@ -283,19 +283,55 @@ useEffect(() => {
 
   if (!selectedChat) {
     return (
-      <div className="flex items-center justify-center h-full bg-zinc-900">
-        <p className="text-blue-500 text-lg">
-          Select a chat to start messaging
-        </p>
+      <div className="flex items-center justify-center h-full bg-gradient-to-br from-zinc-900 to-zinc-500">
+        <img src="/logo.png" alt="Syncly Logo" className="w-3xl h-3xl" />
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full bg-zinc-900">
-        <p className="text-gray-300">Loading messages...</p>
+      <div className="flex flex-col h-full p-4 bg-zinc-900 ">
+      {/* Header Skeleton */}
+      <div className="mb-4 pb-4 border-b border-zinc-700 flex justify-between items-center animate-pulse">
+        <div className="space-y-2">
+          <div className="h-5 w-40 bg-zinc-700 rounded"></div>
+          <div className="h-3 w-24 bg-zinc-800 rounded"></div>
+        </div>
+
+        <div className="h-3 w-44 bg-zinc-800 rounded"></div>
       </div>
+
+      {/* Messages Skeleton */}
+      <div className="flex-1 overflow-y-auto mb-4 bg-zinc-800 rounded p-4 space-y-4 animate-pulse">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className={`max-w-sm ${
+              i % 2 === 0 ? "me-auto" : "ms-auto"
+            }`}
+          >
+            {/* Time */}
+            <div className="h-2 w-12 bg-zinc-700 rounded mb-1 ms-auto"></div>
+
+            {/* Message bubble */}
+            <div
+              className={`h-10 rounded ${
+                i % 2 === 0
+                  ? "bg-zinc-700"
+                  : "bg-blue-700/50"
+              }`}
+            ></div>
+          </div>
+        ))}
+      </div>
+
+      {/* Input Skeleton */}
+      <div className="flex gap-2 animate-pulse">
+        <div className="flex-1 h-10 bg-zinc-800 rounded"></div>
+        <div className="w-20 h-10 bg-blue-900 rounded"></div>
+      </div>
+    </div>
     );
   }
 

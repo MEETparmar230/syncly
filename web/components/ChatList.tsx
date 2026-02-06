@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { socket } from "@/lib/socket";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuthContex } from "@/lib/auth-context";
+import { Message } from "@/lib/types";
 
 type OnlineMap = Record<number, boolean>;
 
@@ -37,7 +37,6 @@ export default function ChatList({
   const [onlineMap, setOnlineMap] = useState<OnlineMap>({});
   const [loading, setLoading] = useState(true);
   const path = process.env.NEXT_PUBLIC_API!;
-  const {user} = useAuthContex()
 
   // Load chats
    useEffect(() => {
@@ -97,7 +96,7 @@ export default function ChatList({
 
   // Listen for new messages to update unread count
   useEffect(() => {
-  const handleNewMessage = (msg: any) => {
+  const handleNewMessage = (msg: Message) => {
     setChats((prev) =>
       prev.map((chat) =>
         chat.chatId === msg.chatId && msg.senderId === chat.otherUserId
@@ -107,7 +106,7 @@ export default function ChatList({
     );
   };
 
-  const handleMessagesSeen = ({ chatId }: any) => {
+  const handleMessagesSeen = ({ chatId }: { chatId: number }) => {
     // ✅ Set to 0 when messages are seen
     setChats((prev) =>
       prev.map((chat) =>
@@ -167,9 +166,34 @@ const handleSelectChat = useCallback(
   [onSelectChat]
 );
 
-  if (loading) {
-    return <p className="p-4 text-zinc-200">Loading chats...</p>;
-  }
+ if (loading) {
+  return (
+    <div className="space-y-2 p-2">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-full flex items-center gap-3 p-3 rounded bg-zinc-800 "
+        >
+          {/* Avatar Skeleton */}
+          <div className="relative flex-shrink-0 animate-pulse">
+            <div className="w-12 h-12 bg-zinc-500 rounded-full"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-zinc-500 rounded-full border-2 border-zinc-800"></div>
+          </div>
+
+          {/* Text Skeleton */}
+          <div className="flex-1 space-y-2 animate-pulse">
+            <div className="h-4 w-32 bg-zinc-500 rounded"></div>
+            <div className="h-3 w-20 bg-zinc-600 rounded"></div>
+          </div>
+
+          {/* Unread Badge Skeleton */}
+          <div className="h-5 w-6 bg-zinc-500 rounded-full animate-pulse"></div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 
   return (
     <div className="space-y-1 p-2">
