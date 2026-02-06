@@ -77,8 +77,30 @@ export default function NewChats({ onClose, onChatCreated }: NewChatsProps) {
         <h2 className="text-xl font-bold mb-4">Start New Chat</h2>
 
         {loading ? (
-          <p className="text-center text-gray-500 py-8">Loading users...</p>
-        ) : users.length === 0 ? (
+    <div className="space-y-2 p-2">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-full flex items-center gap-3 p-3 rounded bg-zinc-800 "
+        >
+          {/* Avatar Skeleton */}
+          <div className="relative flex-shrink-0 animate-pulse">
+            <div className="w-12 h-12 bg-zinc-500 rounded-full"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-zinc-500 rounded-full border-2 border-zinc-800"></div>
+          </div>
+
+          {/* Text Skeleton */}
+          <div className="flex-1 space-y-2 animate-pulse">
+            <div className="h-4 w-32 bg-zinc-500 rounded"></div>
+            <div className="h-3 w-20 bg-zinc-600 rounded"></div>
+          </div>
+
+          {/* Unread Badge Skeleton */}
+          <div className="h-5 w-6 bg-zinc-500 rounded-full animate-pulse"></div>
+        </div>
+      ))}
+    </div>
+  ) : users.length === 0 ? (
           <p className="text-center text-gray-500 py-8">No users available</p>
         ) : (
           <div className="space-y-2 overflow-y-auto flex-1">
