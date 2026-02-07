@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import { set } from "zod";
+import { registerSchema } from "@/zod/registerValidation";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -12,12 +14,31 @@ export default function RegisterPage() {
   const router = useRouter();
   const path = process.env.NEXT_PUBLIC_API!;
   const [isTakenName, setIsTakenName] = useState<boolean>(false);
-  const [isTakenEmial, setIsTakenEmail] = useState<boolean>(false);
+  const [isTakenEmail, setIsTakenEmail] = useState<boolean>(false);
+  const [errors,setErrors] = useState<{
+  name?:string
+  email?: string;
+  password?: string;}>({})
 
   async function handleRegister() {
     setIsTakenEmail(false);
     setIsTakenName(false);
+    setErrors({})
     try {
+
+      const result = registerSchema.safeParse({name,email,password})
+
+      if(!result.success){
+        const fieldErrors:{[key:string]:string} = {}
+
+        result.error.issues.forEach(issue=>{
+          const field = issue.path[0] as string
+          fieldErrors[field] = issue.message
+        })
+        setErrors(fieldErrors)
+        return
+      }
+
       const res = await axios.post(
         `${path}/auth/register`,
         { name, email, password },
@@ -65,26 +86,43 @@ export default function RegisterPage() {
               username is taken
             </p>
           )}
+          {errors.name && (
+            <p className="text-sm text-red-300 animate-pulse">
+              {errors.name}
+            </p>
+          )}
         </div>
 
         <div>
           <input
-            className={`border p-2 w-full ${isTakenEmial && "border-red-500 animate-pulse"}`}
+            className={`border p-2 w-full ${isTakenEmail && "border-red-500 animate-pulse"}`}
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
-          {isTakenEmial && (
+          {isTakenEmail && (
             <p className="text-sm text-red-300 animate-pulse">
               email already exists
             </p>
           )}
+          {errors.email && (
+            <p className="text-sm text-red-300 animate-pulse">
+              {errors.email}
+            </p>
+          )}
         </div>
+        <div>
         <input
           className="border p-2 w-full"
           type="password"
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
+        {errors.password && (
+            <p className="text-sm text-red-300 animate-pulse">
+              {errors.password}
+            </p>
+          )}
+        </div>
         <button
           className="bg-black text-white w-full py-2"
           onClick={handleRegister}

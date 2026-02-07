@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from 'axios'
 import toast from "react-hot-toast";
 import { useAuthContex } from "@/lib/auth-context";
+import { loginSchema } from "@/zod/loginValidation";
 
 type LoginResponse = {
   success?: boolean,
@@ -18,9 +19,25 @@ export default function LoginPage() {
   const router = useRouter();
   const path = process.env.NEXT_PUBLIC_API!
   const {setIsLoggedIn} = useAuthContex()
+  const [errors,setErrors] = useState<{
+  email?: string;
+  password?: string;}>({})
 
   async function handleLogin() {
+    setErrors({})
     try {
+      const result = loginSchema.safeParse({email,password})
+      if(!result.success){
+        const fieldErrors:{[key: string]: string} = {}
+        result.error.issues.forEach(issue =>{
+          const field = issue.path[0] as string;
+          fieldErrors[field] = issue.message;
+        })
+
+        setErrors(fieldErrors)
+        return
+      }
+      
       const res = await axios.post<LoginResponse>(
         `${path}/auth/login`,
         { email, password },
@@ -58,17 +75,24 @@ export default function LoginPage() {
     <div className="h-screen flex items-center justify-center">
       <div className="w-80 space-y-3">
         <h1 className="text-xl font-bold">Login</h1>
+        <div>
         <input
           className="border p-2 w-full"
           placeholder="Email"
           onChange={e => setEmail(e.target.value)}
         />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        </div>
+
+        <div>
         <input
           className="border p-2 w-full"
           type="password"
           placeholder="Password"
           onChange={e => setPassword(e.target.value)}
         />
+        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        </div>
         <button
           className="bg-black text-white w-full py-2"
           onClick={handleLogin}

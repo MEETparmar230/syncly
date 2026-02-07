@@ -1,12 +1,16 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { loginSchema, registerSchema } from "../types/authSchema";
 import { loginUser, registerUser,verifyToken } from "../services/authService";
+import appError from "../middlewares/appError";
 
 interface loginRequest extends Request{
   userId?:number
 }
 
-export async function register(req: Request, res: Response) {
+export async function register(req: Request, res: Response , next:NextFunction) {
+ 
+  try{
+
   const body = registerSchema.parse(req.body);
 
   const user = await registerUser(
@@ -15,13 +19,21 @@ export async function register(req: Request, res: Response) {
     body.password
   );
 
-  res.status(201).json({ success: true, user });
+   res.status(201).json({ success: true, user });
+  }
+  catch(err){
+    next(err)
+  }
+
+ 
 }
 
-export async function login(req: Request, res: Response) {
-  const body = loginSchema.parse(req.body);
-
-  const result = await loginUser(body.email, body.password);
+export async function login(req: Request, res: Response, next:NextFunction) {
+  
+  try{
+    
+    const body = loginSchema.parse(req.body);
+    const result = await loginUser(body.email, body.password);
 
   res.cookie("token",result.token,{
     httpOnly: true,
@@ -31,6 +43,11 @@ export async function login(req: Request, res: Response) {
   })
 
   res.json({ success: true, token:result.token });
+  }
+  catch(err){
+    next(err)
+  }
+  
 
 }
 

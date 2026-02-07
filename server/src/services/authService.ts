@@ -13,71 +13,93 @@ export async function registerUser(
   name: string,
   email: string,
   password: string
-) 
-{
-  
-  const emailExists = await db.select().from(usersTable).where(eq(usersTable.email,email))
+) {
+  try {
 
-  const nameExists = await db.select().from(usersTable).where(eq(usersTable.name,name))
 
-if(emailExists.length !== 0 && nameExists.length !== 0){
-  throw new appError("Name and Email both already exists",401)
-}
-  if(emailExists.length !== 0){
-    console.log(emailExists)
-    
-    throw new appError("Email already exists",401)
+    const existingUser = await db.select({ email: usersTable.email, name: usersTable.name }).from(usersTable).where(or(eq(usersTable.email, email), eq(usersTable.name, name)))
+
+
+
+    if (existingUser.length != 0) {
+      const exists = existingUser[0]
+
+      if (exists?.email === email && exists?.name === name) {
+        throw new appError("Name and Email both already exists", 409)
+      }
+
+      if (exists?.email === email) {
+        throw new appError("Email already exists", 409)
+      }
+
+      if (exists?.name === name) {
+        throw new appError("UserName is Taken", 409)
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const [user] = await db
+      .insert(usersTable)
+      .values({
+        name,
+        email,
+        password: hashedPassword,
+      })
+      .returning({
+        id: usersTable.id,
+        name: usersTable.name,
+        email: usersTable.email,
+      });
+    return user;
+  } catch (err) {
+    if (err instanceof appError) {
+      throw err
+    }
+
+    console.log("Registration DB error:", err);
+    throw new appError("Registration service temporarily unavailable", 503)
   }
-
-  if(nameExists.length !== 0){
-    console.log(nameExists)
-    throw new appError("UserName is Taken",401)
-  }
-
-
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const [user] = await db
-    .insert(usersTable)
-    .values({
-      name,
-      email,
-      password: hashedPassword,
-    })
-    .returning({
-      id: usersTable.id,
-      name: usersTable.name,
-      email: usersTable.email,
-    });
-  return user;
-
-
 }
+
+
 
 export async function loginUser(email: string, password: string) {
-  const user = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.email, email))
-    .then((res) => res[0]);
 
-  if (!user) throw new appError("Invalid credentials",401);
+  try {
+    const user = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email))
+      .then((res) => res[0]);
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new appError("Invalid credentials",401);
+    if (!user) throw new appError("Invalid credentials", 401);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new appError("Invalid credentials", 401);
 
 
-  const token = jwt.sign(
-    { userId: user.id, email: user.email },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-  return { token, userId: user.id };
+    return { token, userId: user.id };
+  }
+  catch (err) {
+    if (err instanceof appError) {
+      throw err
+    }
+    console.error("Login DB error:", err);
+    throw new appError("Authentication service temporarily unavailable", 503)
+  }
 }
 
-export const verifyToken = (t:string) =>{
-  
+
+
+
+export const verifyToken = (t: string) => {
+
   if (!t) {
     throw new appError("Not Authenticated", 401);
   }
