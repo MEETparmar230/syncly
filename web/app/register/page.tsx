@@ -82,12 +82,12 @@ export default function RegisterPage() {
             onChange={(e) => setName(e.target.value)}
           />
           {isTakenName && (
-            <p className="text-sm text-red-300 animate-pulse">
+            <p className="text-sm text-red-400 animate-pulse">
               username is taken
             </p>
           )}
           {errors.name && (
-            <p className="text-sm text-red-300 animate-pulse">
+            <p className="text-sm text-red-400 animate-pulse">
               {errors.name}
             </p>
           )}
@@ -100,12 +100,12 @@ export default function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
           />
           {isTakenEmail && (
-            <p className="text-sm text-red-300 animate-pulse">
+            <p className="text-sm text-red-400 animate-pulse">
               email already exists
             </p>
           )}
           {errors.email && (
-            <p className="text-sm text-red-300 animate-pulse">
+            <p className="text-sm text-red-400 animate-pulse">
               {errors.email}
             </p>
           )}
@@ -118,7 +118,7 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {errors.password && (
-            <p className="text-sm text-red-300 animate-pulse">
+            <p className="text-sm text-red-400 animate-pulse">
               {errors.password}
             </p>
           )}

@@ -81,7 +81,7 @@ export default function LoginPage() {
           placeholder="Email"
           onChange={e => setEmail(e.target.value)}
         />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        {errors.email && <p className="text-sm text-red-400 animate-pulse">{errors.email}</p>}
         </div>
 
         <div>
@@ -91,7 +91,7 @@ export default function LoginPage() {
           placeholder="Password"
           onChange={e => setPassword(e.target.value)}
         />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        {errors.password && <p className="text-red-400 text-sm animate-pulse">{errors.password}</p>}
         </div>
         <button
           className="bg-blue-900 text-zinc-100 rounded hover:bg-blue-800 cursor-pointer w-full py-2"
