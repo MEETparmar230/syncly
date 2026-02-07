@@ -73,11 +73,11 @@ export default function RegisterPage() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="w-80 space-y-3">
-        <h1 className="text-xl font-bold">Register</h1>
+      <div className="w-md space-y-5 border border-zinc-500 bg-zinc-900 p-6 rounded ">
+        <h1 className="text-2xl font-bold">Register</h1>
         <div>
           <input
-            className={`border p-2 w-full ${isTakenName && "border-red-500 animate-pulse"}`}
+            className={`border border-zinc-500  bg-zinc-800 outline-none focus:border-blue-500 p-2 w-full rounded  ${isTakenName && "border-red-500 animate-pulse"}`}
             placeholder="Name"
             onChange={(e) => setName(e.target.value)}
           />
@@ -95,7 +95,7 @@ export default function RegisterPage() {
 
         <div>
           <input
-            className={`border p-2 w-full ${isTakenEmail && "border-red-500 animate-pulse"}`}
+            className={`border border-zinc-500  bg-zinc-800 outline-none focus:border-blue-500 p-2 w-full rounded  ${isTakenEmail && "border-red-500 animate-pulse"}`}
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -112,7 +112,7 @@ export default function RegisterPage() {
         </div>
         <div>
         <input
-          className="border p-2 w-full"
+          className="border border-zinc-500  bg-zinc-800 outline-none focus:border-blue-500 p-2 w-full rounded "
           type="password"
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
@@ -124,7 +124,7 @@ export default function RegisterPage() {
           )}
         </div>
         <button
-          className="bg-black text-white w-full py-2"
+          className="bg-blue-900 text-zinc-100 rounded hover:bg-blue-800 cursor-pointer w-full py-2"
           onClick={handleRegister}
         >
           Register

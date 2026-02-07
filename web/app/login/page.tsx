@@ -73,11 +73,11 @@ export default function LoginPage() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="w-80 space-y-3">
-        <h1 className="text-xl font-bold">Login</h1>
+      <div className="w-md space-y-5 border border-zinc-500 bg-zinc-900 p-6 rounded ">
+        <h1 className="text-2xl font-bold">Login</h1>
         <div>
         <input
-          className="border p-2 w-full"
+          className="border border-zinc-500  bg-zinc-800 outline-none focus:border-blue-500 p-2 w-full rounded "
           placeholder="Email"
           onChange={e => setEmail(e.target.value)}
         />
@@ -86,7 +86,7 @@ export default function LoginPage() {
 
         <div>
         <input
-          className="border p-2 w-full"
+          className="border bg-zinc-800 border-zinc-500 outline-none focus:border-blue-500 p-2 w-full rounded"
           type="password"
           placeholder="Password"
           onChange={e => setPassword(e.target.value)}
@@ -94,7 +94,7 @@ export default function LoginPage() {
         {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         </div>
         <button
-          className="bg-black text-white w-full py-2"
+          className="bg-blue-900 text-zinc-100 rounded hover:bg-blue-800 cursor-pointer w-full py-2"
           onClick={handleLogin}
         >
           Login
