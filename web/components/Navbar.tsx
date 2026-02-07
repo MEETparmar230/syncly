@@ -3,11 +3,34 @@
 import { useAuthContex } from '@/lib/auth-context'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function Navbar() {
   const { loading, isLoggedIn,setIsLoggedIn  } = useAuthContex()
   const router = useRouter()
   const path = process.env.NEXT_PUBLIC_API!
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < lastScrollY) {
+        // scrolling up
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY) {
+        // scrolling down
+        setVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const handleLogOut = async () => {
     await axios.get(`${path}/auth/logout`, { withCredentials: true })
@@ -29,15 +52,20 @@ export default function Navbar() {
   }
 
   return (
-    <div className="border-b py-1 text-zinc-200 flex justify-end items-center gap-5 px-20">
+    <div className={`border-b border-zinc-500  py-1 text-zinc-200 flex justify-between items-center gap-5 md:ps-20 ps:4 pe-2  ${visible ? "translate-y-0" : "-translate-y-full"}`}>
+      <div>
+        <img className=' h-10' src="/syncly.png" alt="" />
+      </div>
+      <div>
       {!isLoggedIn ? (                              
         <div className="mx-2">
-          <a className="me-2" href="/login">Login</a>
-          <a href="/register">Sign Up</a>
+          <a className="me-2 border border-zinc-500 px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-900" href="/login">Login</a>
+          <a className='border border-zinc-500 px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-900' href="/register">Sign Up</a>
         </div>
       ) : (
         <button onClick={handleLogOut}>Log out</button>
       )}
+      </div>
     </div>
   )
 }

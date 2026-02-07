@@ -34,10 +34,6 @@ export default function Home() {
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
 
-    if (socket.connected) {
-      setIsConnected(true);
-    }
-
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
@@ -80,9 +76,10 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Chat List */}
-        <div className="w-80 border-r bg-zinc-900 flex flex-col">
-          <div className="p-4 border-b flex justify-between items-center">
-            <h1 className="text-white text-2xl font-bold">Chats</h1>
+        <div className="w-80 border-r border-zinc-500 bg-zinc-900 flex flex-col">
+          <div className="p-4 border-b border-zinc-500 flex justify-between items-center">
+            <h1 className="text-zinc-200 text-2xl font-bold">Chats</h1>
+            {/* <img className="h-8 " src="/syncly.png" alt="" /> */}
             <button
               onClick={() => setIsNewChatOpen(true)}
               className="text-lg px-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-bold transition"

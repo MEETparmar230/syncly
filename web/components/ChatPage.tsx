@@ -275,8 +275,8 @@ useEffect(() => {
 
   if (authLoading || !user) {
     return (
-      <div className="flex items-center justify-center h-full bg-zinc-900">
-        <p className="text-gray-300">Loading user...</p>
+       <div className="flex items-center justify-center h-full bg-gradient-to-br from-zinc-900 to-zinc-800">
+        <img src="/logo.png" alt="Syncly Logo" className="w-3xl h-3xl" />
       </div>
     );
   }
