@@ -94,7 +94,7 @@ useEffect(() => {
         setIsLoggedIn(false)
         socket.disconnect()
         if(!authPaths.includes(pathname)){
-          // router.push('/login')
+          router.push('/login')
         }
       } finally {
         setLoading(false)
