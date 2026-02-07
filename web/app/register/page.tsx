@@ -20,7 +20,8 @@ export default function RegisterPage() {
   email?: string;
   password?: string;}>({})
 
-  async function handleRegister() {
+  async function handleRegister(e: React.FormEvent) {
+    e.preventDefault();
     setIsTakenEmail(false);
     setIsTakenName(false);
     setErrors({})
@@ -73,7 +74,7 @@ export default function RegisterPage() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="w-md space-y-5 border border-zinc-500 bg-zinc-900 p-6 rounded ">
+      <form onSubmit={(e)=>handleRegister(e)} className="w-md space-y-5 border border-zinc-500 bg-zinc-900 p-6 rounded ">
         <h1 className="text-2xl font-bold">Register</h1>
         <div>
           <input
@@ -125,11 +126,10 @@ export default function RegisterPage() {
         </div>
         <button
           className="bg-blue-900 text-zinc-100 rounded hover:bg-blue-800 cursor-pointer w-full py-2"
-          onClick={handleRegister}
         >
           Register
         </button>
-      </div>
+      </form>
     </div>
   );
 }

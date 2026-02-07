@@ -18,12 +18,15 @@ export default function Navbar() {
 
   if(loading){
     return (
-      <div className="border-b py-1 text-zinc-200 flex justify-end items-center gap-5 px-20">
-                            
-       
-          <a className=" bg-zinc-300 animate-pulse h-4 w-20 rounded" ></a>
-          <a className=" bg-zinc-300 animate-pulse h-4 w-20 rounded" ></a>
-        <button className=" bg-zinc-300 animate-pulse h-4 w-20 rounded" ></button>
+      <div className="border-b border-zinc-500  py-1 text-zinc-200 flex justify-between items-center gap-5 md:ps-20 ps:4 pe-2 ">
+      <div>
+        <img className=' h-10' src="/syncly.png" alt="SYncly logo" />
+      </div>                 
+      <div className='space-x-3 flex items-center'>
+          <button className=" bg-zinc-500 animate-pulse h-6 w-20 rounded" ></button>
+          <button className=" bg-zinc-500 animate-pulse h-6 w-20 rounded" ></button>
+          <button className=" bg-zinc-500 animate-pulse h-6 w-20 rounded" ></button>
+        </div>
 
     </div>
     )
@@ -31,13 +34,13 @@ export default function Navbar() {
 
   return (
     <div className={`border-b border-zinc-500  py-1 text-zinc-200 flex justify-between items-center gap-5 md:ps-20 ps:4 pe-2 `}>
-      <div>
+      <div className='flex items-center'>
         <img className=' h-10' src="/syncly.png" alt="SYncly logo" />
       </div>
       <div>
       {!isLoggedIn ? (                              
-        <div className="mx-2">
-          <a className="me-2 border border-zinc-500 px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-900" href="/login">Login</a>
+        <div className="mx-2 space-x-3 flex items-center">
+          <a className="border border-zinc-500 px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-900" href="/login">Login</a>
           <a className='border border-zinc-500 px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-900' href="/register">Sign Up</a>
         </div>
       ) : (

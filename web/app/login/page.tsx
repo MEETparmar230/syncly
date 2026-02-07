@@ -23,7 +23,8 @@ export default function LoginPage() {
   email?: string;
   password?: string;}>({})
 
-  async function handleLogin() {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
     setErrors({})
     try {
       const result = loginSchema.safeParse({email,password})
@@ -73,7 +74,7 @@ export default function LoginPage() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="w-md space-y-5 border border-zinc-500 bg-zinc-900 p-6 rounded ">
+      <form onSubmit={(e)=>handleLogin(e)} className="w-md space-y-5 border border-zinc-500 bg-zinc-900 p-6 rounded ">
         <h1 className="text-2xl font-bold">Login</h1>
         <div>
         <input
@@ -95,11 +96,11 @@ export default function LoginPage() {
         </div>
         <button
           className="bg-blue-900 text-zinc-100 rounded hover:bg-blue-800 cursor-pointer w-full py-2"
-          onClick={handleLogin}
+          type="submit"
         >
           Login
         </button>
-      </div>
+      </form>
     </div>
   );
 }
